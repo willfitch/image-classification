@@ -3,10 +3,13 @@ var uuid = require('uuid'),
     server = restify.createServer(),
     log = require('./lib/log').logger,
     routes = require('./routes'),
-    Queue = require('./lib/controllers/queue');
+    config = require('./etc/config'),
+    ImageManager = require('./lib/controllers/image-manager');
+
+var serverPort = config.server.port || 8080;
 
 var controllerMap = {
-  queue: new Queue()
+  imageManager: new ImageManager()
 };
 
 // Log the request
@@ -17,6 +20,7 @@ server.use(function (req, res, next) {
 
 routes(server, controllerMap);
 
-server.listen(8080, function() {
-  console.log('Starting on 8080');
+server.listen(serverPort, function() {
+  console.log('Starting server on port ' + serverPort);
+  log.warn('Starting server on port ' + serverPort);
 });
